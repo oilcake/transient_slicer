@@ -2,9 +2,16 @@
 import os, aifc
 import numpy as np
 from aubio import source, onset, sink
+from optparse import OptionParser
 
-path_in = '/Volumes/STUFF/[SAMPLES]/Xylophone/TUNED_mono'
-path_out = "/Volumes/STUFF/[SAMPLES]/Xylophone/script_check/OUT/"
+parser = OptionParser()
+parser.add_option("-i", "--input-dir", dest="input_dir", help="Source files directory")
+parser.add_option("-o", "--output-dir", dest="output_dir", help="Output files directory")
+(options, args) = parser.parse_args()
+
+path_in = options.input_dir
+path_out = options.output_dir
+
 temporary_postfix = 'temporary/'
 # global file_info
 # file_info = []
