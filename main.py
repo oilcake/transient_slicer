@@ -121,11 +121,10 @@ def file_out(params, path, file_info, file_name_mask):
         print('ooo shiiit it is already taken')
 
 
-for file_in in os.listdir(path_in):
-    filename = path_in + '/' + file_in
-    if file_in[-4:] != '.aif':
-        print("ooohhh shhiiitt it is not audio")
-        continue
+
+def find_or_create_directory_for(filename):
+    # TODO: should we really rely on note names?
+    # Add --prefix-separator parameter
     if file_in[4] == '#':
         note_prefix = file_in[0:6]
     else:
@@ -136,14 +135,27 @@ for file_in in os.listdir(path_in):
     path = path_out + note_prefix + '/'
 
     print('out path is', path)
-    # Create target Directory if don't exist
+    # Create target Directory if doesn't exist
     if not os.path.exists(path):
         os.mkdir(path)
         print("Directory ", path, " Created ")
     else:
         print("Directory ", path, " already exists")
-    find_onsets(filename)
 
+    return path
+
+
+# TODO: add wav functionality
+def audio_files_within(path):
+    all_files = os.listdir(path)
+    return filter(lambda file : file[-4:] == '.aif', all_files)
+
+for file_in in audio_files_within(path_in):
+    filename = path_in + '/' + file_in
+
+    path = find_or_create_directory_for(filename)
+
+    find_onsets(filename)
     params = transient_slicer(filename, onsets, path, file_in)
 
 for folder in os.listdir(path_out):
