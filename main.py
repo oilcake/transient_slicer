@@ -46,6 +46,7 @@ def find_onsets(filename):
         print('number of onsets = ', len(onsets))
 
     return onsets
+
 def transient_slicer(filename, onsets, path, file_in):
     path_temp = path + temporary_postfix
     if not os.path.exists(path_temp):
@@ -55,11 +56,16 @@ def transient_slicer(filename, onsets, path, file_in):
         print("Directory ", path_temp, " already exists")
 
 
+    notes = []
 
     with aifc.open(filename, 'r') as source_file:
-        count = 0
+        # count = 0
         params = (source_file.getparams())
+
+
         for address in onsets:
+            # note = Note(source_file, address)
+
             print('write onset count', count)
             ##         print(cunt)
             source_file.setpos(address)
@@ -68,18 +74,94 @@ def transient_slicer(filename, onsets, path, file_in):
                 gap = source_file.getnframes() - address
             else:
                 gap = onsets[step_ahead] - address
-            one_note = source_file.readframes(gap)
+            # one_note = source_file.readframes(gap)
 
-            filename_temp = path_temp + file_in + '_tmp_' + str(count) + '.aif'
-            if not os.path.isfile(filename_temp):
-                with aifc.open(filename_temp ,'w') as bigdick:
-                    bigdick.setparams(params)
-                    bigdick.writeframes(one_note)
-            else:
-                print('file exists')
-            count += 1
+
+            note_frames = source_file.readframes(gap)
+
+            # filename_temp = path_temp + file_in + '_tmp_' + str(count) + '.aif'
+
+            name = "TODO"
+
+            note = Note(note_frames, name, params)
+            notes.append(note)
+            note.tmp_persist() # writes itself in the filesystem
+
+
+
+            #
+            # filename_temp = path_temp + file_in + '_tmp_' + str(count) + '.aif'
+            # if not os.path.isfile(filename_temp):
+            #     with aifc.open(filename_temp ,'w') as bigdick:
+            #         bigdick.setparams(params)
+            #         bigdick.writeframes(one_note)
+            # else:
+            #     print('file exists')
+            # count += 1
     print("temporary files are writen")
-    return params
+    # return params
+    return notes
+
+
+# /path_in/A1.aif
+# /path_in/A2.aif
+
+class Note:
+    def __init__(self, name, frames, file_params):
+        self.name = name
+        self.frames = frames
+        self.file_params = file_params
+
+    def tmp_persist(self):
+        if not os.path.isfile(self.filename_temp):
+            with aifc.open(self.filename_temp, 'w') as output:
+                output.setparams(self.file_params)
+                output.writeframes(self.frames)
+        else:
+            print('file exists')
+        # count += 1
+
+    def final_persist(self):
+
+    def good_enough(self):
+
+
+    def filename_temp(self):
+        # TODO: count?
+        # path_temp?
+        return path_temp + self.name + '_tmp_' + '.aif'
+
+
+# source_file: /path_in/A1.aif
+def extract_notes_from(source_file)
+    onsets = find_onsets(source_file)
+    notes = []
+
+    for address in onsets:
+        source_file.setpos(address)
+        step_ahead = onsets.index(address) + 1
+        if step_ahead == len(onsets):
+            gap = source_file.getnframes() - address
+        else:
+            gap = onsets[step_ahead] - address
+
+        note_frames = source_file.readframes(gap)
+
+        name = "A1" # extracted from file  name
+        note = Note(name, note_frames, params)
+        notes.append(note)
+        note.tmp_persist()  # writes note to the filesystem
+
+    return notes
+
+
+
+for note in extract_notes_from(source_file):
+    if note.good_enough():
+        note.final_persist()
+
+
+
 def find_biggest_dick_and_stop_point(filename_given):
 
     stop_point = 0
@@ -145,6 +227,9 @@ def find_or_create_directory_for(filename):
     return path
 
 
+
+
+
 # TODO: add wav functionality
 def audio_files_within(path):
     all_files = os.listdir(path)
@@ -155,7 +240,7 @@ for file_in in audio_files_within(path_in):
 
     path = find_or_create_directory_for(filename)
 
-    find_onsets(filename)
+    # find_onsets(filename)
     params = transient_slicer(filename, onsets, path, file_in)
 
 for folder in os.listdir(path_out):
