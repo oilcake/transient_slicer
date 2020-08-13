@@ -13,9 +13,6 @@ path_in = options.input_dir
 path_out = options.output_dir
 
 temporary_postfix = 'temporary/'
-# global file_info
-# file_info = []
-# global onsets
 global WIN_S_OUT
 global HOP_S_OUT
 global one_note_out
@@ -58,7 +55,6 @@ def transient_slicer(filename, onsets, path, file_in):
         print("Directory ", path_temp, " already exists")
 
 
-    #    print('slicing file', str(filename))
 
     with aifc.open(filename, 'r') as source_file:
         count = 0
@@ -70,12 +66,9 @@ def transient_slicer(filename, onsets, path, file_in):
             step_ahead = onsets.index(address) + 1
             if step_ahead == len(onsets):
                 gap = source_file.getnframes() - address
-                # print('this is the end of file')
             else:
                 gap = onsets[step_ahead] - address
             one_note = source_file.readframes(gap)
-            # for list_value in range(0, gap, 10000):
-            #     print(list_value)
 
             filename_temp = path_temp + file_in + '_tmp_' + str(count) + '.aif'
             if not os.path.isfile(filename_temp):
@@ -89,13 +82,9 @@ def transient_slicer(filename, onsets, path, file_in):
     return params
 def find_biggest_dick_and_stop_point(filename_given):
 
-#    print('kokoko')
-#     win_s_out = 16384                # fft size
-#     hop_s_out = win_s_out // 2       # hop size
     stop_point = 0
     samplerate = 0
     silence = 0.0001
-    # global file_info
 
 
     with source(filename_given, samplerate, HOP_S_OUT) as s_out:
@@ -123,26 +112,13 @@ def find_biggest_dick_and_stop_point(filename_given):
     return file_info
 
 def file_out(params, path, file_info, file_name_mask):
-    # with aubio.source(filename, 0, HOP_S_OUT) as tmpr_file:
-        # for frames in tmpr_file:
-
-            # tmpr_file.rewind()
-            # print('prochital')
-            # tmpr_file.setpos(0)
-            # one_note_out = np.array(tmpr_file.readframes(file_info[1]))
-    # print('otkryl skopiroval i zakryl')
     filename_out = path + '/' + file_name_mask + str(file_info[0])[:7] + '.aif'
     if not os.path.isfile(filename_out):
         with aubio.sink(filename_out, 48000, 2) as src:
             src(fvec(one_note_out))
-            # out_now.setparams(params)
-            # print(bytes(one_note_out))
-            # out_now.writeframes(bytes(one_note_out))
         print("zapisal")
     else:
         print('ooo shiiit it is already taken')
-    # print('result length', len(one_note_out))
-    return
 
 
 for file_in in os.listdir(path_in):
@@ -169,7 +145,6 @@ for file_in in os.listdir(path_in):
     find_onsets(filename)
 
     params = transient_slicer(filename, onsets, path, file_in)
-# print('files are sliced')
 
 for folder in os.listdir(path_out):
     print(folder)
@@ -193,6 +168,5 @@ for folder in os.listdir(path_out):
         if file_info[1] < 8000:
             print('too short')
             continue
-        # file_out(params, path_out + folder, file_info, folder)
 
 print('Egooooooooooooooooor, value for value')
