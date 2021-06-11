@@ -24,7 +24,6 @@ HOP_S_OUT = WIN_S_OUT // 2  # hop size
 def find_onsets(filename):
     win_s = 16  # fft size
     hop_s = win_s // 2  # hop size
-    # nonlocal samplerate
     samplerate = 0
     o = onset("default", win_s, hop_s, samplerate)
 
@@ -122,9 +121,9 @@ class Note:
         # count += 1
 
     def final_persist(self):
-
+        ...
     def good_enough(self):
-
+        ...
 
     def filename_temp(self):
         # TODO: count?
