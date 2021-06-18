@@ -3,14 +3,19 @@ import os, aifc
 import numpy as np
 from aubio import source, onset, sink
 from optparse import OptionParser
+import argparse
 
-parser = OptionParser()
-parser.add_option("-i", "--input-dir", dest="input_dir", help="Source files directory")
-parser.add_option("-o", "--output-dir", dest="output_dir", help="Output files directory")
-(options, args) = parser.parse_args()
+# parser = OptionParser()
+# parser.add_option("-i", "--input-dir", dest="input_dir", help="Source files directory")
+# parser.add_option("-o", "--output-dir", dest="output_dir", help="Output files directory")
+# (options, args) = parser.parse_args()
 
-path_in = options.input_dir
-path_out = options.output_dir
+parser = argparse.ArgumentParser(description='arguments')
+parser.add_argument('--input-dir', type=str, help='Source files directory')
+args = parser.parse_args()
+
+path_in = args.input_dir
+path_out = args.output_dir
 
 temporary_postfix = 'temporary/'
 global WIN_S_OUT
