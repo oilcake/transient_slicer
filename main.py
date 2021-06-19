@@ -127,9 +127,9 @@ class Note:
         # count += 1
 
     def final_persist(self):
-        ...
+        pass
     def good_enough(self):
-        ...
+        pass
 
     def filename_temp(self):
         # TODO: count?
@@ -138,7 +138,7 @@ class Note:
 
 
 # source_file: /path_in/A1.aif
-def extract_notes_from(source_file)
+def extract_notes_from(source_file):
     onsets = find_onsets(source_file)
     notes = []
 
