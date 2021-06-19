@@ -11,7 +11,8 @@ import argparse
 # (options, args) = parser.parse_args()
 
 parser = argparse.ArgumentParser(description='arguments')
-parser.add_argument('--input-dir', type=str, help='Source files directory')
+parser.add_argument("-i", '--input-dir', type=str, help='Source files directory')
+parser.add_option("-o", "--output-dir", type=str, help="Output files directory")
 args = parser.parse_args()
 
 path_in = args.input_dir
