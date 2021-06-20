@@ -1,8 +1,9 @@
-
+input
 import os, aifc
 import numpy as np
 from aubio import source, onset, sink
 from optparse import OptionParser
+from slicer import *
 import argparse
 
 # parser = OptionParser()
@@ -11,14 +12,20 @@ import argparse
 # (options, args) = parser.parse_args()
 
 parser = argparse.ArgumentParser(description='arguments')
-parser.add_argument("-i", '--input-dir', type=str, help='Source files directory')
-parser.add_option("-o", "--output-dir", type=str, help="Output files directory")
+# parser.add_argument("--i", '--input-dir', type=str, help='Source files directory')
+# parser.add_argument("--o", "--output-dir", type=str, help="Output files directory")
+parser.add_argument("input", help="Source files directory", type=str)
+parser.add_argument("output", help="Output files directory", type=str)
 args = parser.parse_args()
 
-path_in = args.input_dir
-path_out = args.output_dir
+print(args.input)
+print(args.output)
+
+path_in = args.input
+path_out = args.output
 
 temporary_postfix = 'temporary/'
+
 global WIN_S_OUT
 global HOP_S_OUT
 global one_note_out
@@ -27,89 +34,6 @@ one_note_out = []
 WIN_S_OUT = 16384  # fft size
 HOP_S_OUT = WIN_S_OUT // 2  # hop size
 
-def find_onsets(filename):
-    win_s = 16  # fft size
-    hop_s = win_s // 2  # hop size
-    samplerate = 0
-    o = onset("default", win_s, hop_s, samplerate)
-
-    o.set_threshold(2.1)
-
-    # list of onsets, in samples
-    global onsets
-    onsets = []
-
-    with source(filename, samplerate, hop_s) as s:
-        samplerate = s.samplerate
-
-        while True:
-            samples, read = s()
-            if o(samples):
-                onsets.append(o.get_last())
-            if read < hop_s: break
-        del s
-        print('number of onsets = ', len(onsets))
-
-    return onsets
-
-def transient_slicer(filename, onsets, path, file_in):
-    path_temp = path + temporary_postfix
-    if not os.path.exists(path_temp):
-        os.mkdir(path_temp)
-        print("Directory ", path_temp, " Created ")
-    else:
-        print("Directory ", path_temp, " already exists")
-
-
-    notes = []
-
-    with aifc.open(filename, 'r') as source_file:
-        # count = 0
-        params = (source_file.getparams())
-
-
-        for address in onsets:
-            # note = Note(source_file, address)
-
-            print('write onset count', count)
-            ##         print(cunt)
-            source_file.setpos(address)
-            step_ahead = onsets.index(address) + 1
-            if step_ahead == len(onsets):
-                gap = source_file.getnframes() - address
-            else:
-                gap = onsets[step_ahead] - address
-            # one_note = source_file.readframes(gap)
-
-
-            note_frames = source_file.readframes(gap)
-
-            # filename_temp = path_temp + file_in + '_tmp_' + str(count) + '.aif'
-
-            name = "TODO"
-
-            note = Note(note_frames, name, params)
-            notes.append(note)
-            note.tmp_persist() # writes itself in the filesystem
-
-
-
-            #
-            # filename_temp = path_temp + file_in + '_tmp_' + str(count) + '.aif'
-            # if not os.path.isfile(filename_temp):
-            #     with aifc.open(filename_temp ,'w') as bigdick:
-            #         bigdick.setparams(params)
-            #         bigdick.writeframes(one_note)
-            # else:
-            #     print('file exists')
-            # count += 1
-    print("temporary files are writen")
-    # return params
-    return notes
-
-
-# /path_in/A1.aif
-# /path_in/A2.aif
 
 class Note:
     def __init__(self, name, frames, file_params):
