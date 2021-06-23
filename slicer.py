@@ -2,7 +2,7 @@ class Slicer():
     pass
 
 def transient_slicer(filename, onsets, path, file_in):
-    path_temp = path + temporary_postfix
+    path_temp = os.path.join(path, temporary_postfix)
     if not os.path.exists(path_temp):
         os.mkdir(path_temp)
         print("Directory ", path_temp, " Created ")
