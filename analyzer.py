@@ -1,36 +1,24 @@
-import os
-from aubio import source, onset, sink
+class Analyzer:
+
+    def __init__(self, record):
+        self.audio = record
+
+    def rewind(self, time):
+        self.audio.seek(time)
+
+    def catch_tail(self):
+        pass
+
+    def detect_volume(self):
+        pass
 
 
-def find_onsets(filename):
-
-    print()
-
-    if os.path.isfile(filename):
-        print('looking for onsets in', filename)
-    else:
-        print("Can't find your file")
-
-    print()
-
-    win_s = 16  # fft size
-    hop_s = win_s // 2  # hop size
-    samplerate = 0
-    o = onset("default", win_s, hop_s, samplerate)
-
-    o.set_threshold(2.1)
-
-    with source(filename, samplerate, hop_s) as s:
-        samplerate = s.samplerate
-
-        while True:
-            samples, read = s()
-            if o(samples):
-                yield o.get_last()
-            if read < hop_s: break
 
 
-def detect_volume_and_length(filename):
+
+
+
+ef detect_volume_and_length(filename):
 
     stop_point = 0
     samplerate = 0
