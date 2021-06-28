@@ -8,6 +8,10 @@ from optparse import OptionParser
 from slicer import *
 import argparse
 
+def process_file(file):
+    onsets = find_onsets(file)
+    transients = map()
+
 # parser = OptionParser()
 # parser.add_option("-i", "--input-dir", dest="input_dir", help="Source files directory")
 # parser.add_option("-o", "--output-dir", dest="output_dir", help="Output files directory")
@@ -34,22 +38,32 @@ makedir(path_out)
 
 files = get_files(path_in)
 
-print()
-print()
+# print()
+# print()
 
 #
 # for file in files:
     # onsets = find_onsets(file)
     # print(file)
     # print(onsets)
+
+# print()
+# print()
+
+onset_maps = map(find_onsets, files)
+
+for map in onset_maps:
+    for onset in map:
+        print(onset)
+
+
+
+# itr = map(find_onsets, files)
 #
 # print()
 # print()
-
-
-
-itr = map(find_onsets, files)
-print(list(itr))
+#
+# print(list(itr))
 # temporary_postfix = 'temporary'
 
 # global WIN_S_OUT
