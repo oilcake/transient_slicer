@@ -1,15 +1,14 @@
-input
 import os, aifc
 import numpy as np
-from analyze import *
+from analyze import find_onsets
 from data_handling import *
 from aubio import source, onset, sink
-from optparse import OptionParser
 from slicer import *
 import argparse
 
 def process_file(file):
     onsets = find_onsets(file)
+    data = Source()
     transients = map()
 
 # parser = OptionParser()
@@ -37,19 +36,6 @@ path_out = args.output
 makedir(path_out)
 
 files = get_files(path_in)
-
-# print()
-# print()
-
-#
-# for file in files:
-    # onsets = find_onsets(file)
-    # print(file)
-    # print(onsets)
-
-# print()
-# print()
-
 onset_maps = map(find_onsets, files)
 
 for map in onset_maps:

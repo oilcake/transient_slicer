@@ -18,7 +18,7 @@ class Analyzer:
 
 
 
-ef detect_volume_and_length(filename):
+def detect_volume_and_length(filename):
 
     stop_point = 0
     samplerate = 0
