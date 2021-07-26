@@ -9,7 +9,6 @@ def makedir(path):
         print("Directory ", path, " Created ")
     else:
         print("Directory ", path, " already exists")
-
     return path
 
 def get_files(path):
