@@ -6,7 +6,7 @@ class Note:
 
     def __init__(self, sample):
         samplerate = 0
-        self.hop_size = 128
+        self.hop_size = 32
         self.sample = source(sample, samplerate, self.hop_size)
 
     def rewind_to(self, onset):
@@ -22,7 +22,6 @@ class Note:
         while True:
             samples, read = self.sample()
             rms = numpy.sqrt(numpy.mean(samples**2))
-            print(rms)
             duration += read
             if rms < silence:
                 break

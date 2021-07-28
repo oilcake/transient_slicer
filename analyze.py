@@ -1,5 +1,5 @@
 import os
-from aubio import source, onset, sink
+from aubio import source, onset
 
 
 def find_onsets(filename):
@@ -21,10 +21,10 @@ def find_onsets(filename):
     o.set_threshold(2.1)
 
     with source(filename, samplerate, hop_s) as s:
-        samplerate = s.samplerate
 
         while True:
             samples, read = s()
             if o(samples):
                 yield o.get_last()
-            if read < hop_s: break
+            if read < hop_s:
+                break
