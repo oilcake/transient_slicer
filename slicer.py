@@ -1,43 +1,67 @@
-class Slicer():
+import numpy
+import aifc
+from aubio import source, onset, sink
 
-    def __init__(self):
-        pass
+class Note:
 
-    def detect_duration(self):
+    def __init__(self, sample):
+        samplerate = 0
+        self.hop_size = 128
+        self.sample = source(sample, samplerate, self.hop_size)
+
+    def rewind_to(self, onset):
+        self.onset = onset
+        self.sample.seek(self.onset)
+
+    def __rewind(self):
+        self.sample.seek(self.onset)
+
+    def duration(self):
+        duration = 0
+        silence = 0.0001
+        while True:
+            samples, read = self.sample()
+            rms = numpy.sqrt(numpy.mean(samples**2))
+            print(rms)
+            duration += read
+            if rms < silence:
+                break
+            if read < self.hop_size:
+                break
+        return duration
+
+    def detect_rms(self):
         pass
 
     def detect_max(self):
-        pass
+        if self.duration:
+            self.__rewind()
+            max = 0
+            frames_total = 0
+            while True:
+                samples, read = self.sample()
+                if max < numpy.amax(samples):
+                    max = numpy.amax(samples)
+                frames_total += read
+                if frames_total > self.duration():
+                    break
+        return max
 
-    def slice(self):
-        pass
-
-def transient_slicer(filename, onsets, path, file_in):
-    path_temp = os.path.join(path, temporary_postfix)
-    if not os.path.exists(path_temp):
-        os.mkdir(path_temp)
-        print("Directory ", path_temp, " Created ")
-    else:
-        print("Directory ", path_temp, " already exists")
+    def close(self):
+        self.sample.close()
 
 
-    notes = []
+class Slicer:
 
-    with aifc.open(filename, 'r') as source_file:
-        params = (source_file.getparams())
-        for address in onsets:
-            print('write onset count', count)
-            source_file.setpos(address)
-            step_ahead = onsets.index(address) + 1
-            if step_ahead == len(onsets):
-                gap = source_file.getnframes() - address
-            else:
-                gap = onsets[step_ahead] - address
-            note_frames = source_file.readframes(gap)
-            name = "TODO"
-            note = Note(note_frames, name, params)
-            notes.append(note)
-            note.tmp_persist() # writes itself in the filesystem
+    def __init__(self, sample, startpoint):
+        self.sample = aifc.open(sample, 'r')
+        self.parameters = self.sample.getparams()
+        self.onset = startpoint
+        self.sample.setpos(self.onset)
 
-    print("temporary files are writen")
-    return notes
+    def slice(self, filename, duration):
+        note = self.sample.readframes(duration)
+        name = "TODO"
+        return note
+
+        

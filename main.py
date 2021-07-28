@@ -1,7 +1,6 @@
 import os, aifc
 from analyze import find_onsets
 from data_handling import *
-from aubio import source, onset, sink
 from slicer import *
 import argparse
 
@@ -31,9 +30,12 @@ files = get_files(path_in)
 
 for file in files:
     onsets = find_onsets(file)
-    editor = 
-    ln = get_duration(onsets)
-    slices = slice(onsets, ln)
-    power = get_power(slice)
     for onset in onsets:
+        note = Note(file)
+        note.rewind_to(onset)
+        postfix = str(note.detect_max())
+        name = postfix + str(file)
+        slicer = Slicer(file, onset)
+        slicer.slice(onset, note.duration())
         print(onset)
+    note.close()

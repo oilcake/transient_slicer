@@ -28,29 +28,3 @@ def find_onsets(filename):
             if o(samples):
                 yield o.get_last()
             if read < hop_s: break
-
-
-def detect_amplitude(filename):
-    pass
-
-def detect_duration(filename, onset):
-
-    stop_point = 0
-    samplerate = 0
-    silence = 0.0001
-    hop_s = 32
-    position = onset
-
-    with source(filename, samplerate, hop_s, position) as s:
-        s.seek(position)
-        max_volume = 0
-        total_frames = 0
-        for frames in s:
-            total_frames += hop_s
-            rms = np.sqrt(np.mean(s**2))
-            if rms < silence:
-                break
-            if len(frames) < hop_s:
-                break
-        file_info = [max_volume, total_frames]
-    return file_info
