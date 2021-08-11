@@ -2,6 +2,8 @@ from housekeeping.datahandling import makedir, get_files
 from audiotools.analyze import find_onsets
 from audiotools.note import Note
 from audiotools.slicer import Slicer
+# from aubio import source
+import aubio
 import argparse
 
 parser = argparse.ArgumentParser(description='arguments')
@@ -25,13 +27,10 @@ files = get_files(path_in)
 
 for file in files:
     onsets = find_onsets(file)
-    note = Note(file)
+    sample = aubio.source(file, samplerate=0, hop_size=64)
     for onset in onsets:
-        note.rewind_to(onset)
-        postfix = str(note.detect_max())
-        name = postfix + str(file)
-        slicer = Slicer(file, onset)
-        slicer.slice(onset, note.duration())
-        print('onset = ', onset)
-        print('duration = ', note.duration())
-    note.close()
+        note = Note(sample, onset)
+        print(file, 'onset = ', onset)
+        print('duration = ', note.duration)
+        print('max value = ', note.max)
+    sample.close()
