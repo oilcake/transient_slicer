@@ -3,7 +3,6 @@ from audiotools.analyze import find_onsets
 from audiotools.note import Note
 from audiotools.slicer import Slicer
 from aubio import source
-# import aubio
 import argparse
 
 parser = argparse.ArgumentParser(description='arguments')
