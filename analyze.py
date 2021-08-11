@@ -21,7 +21,6 @@ def find_onsets(filename):
     o.set_threshold(2.1)
 
     with source(filename, samplerate, hop_s) as s:
-
         while True:
             samples, read = s()
             if o(samples):

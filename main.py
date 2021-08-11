@@ -1,6 +1,7 @@
 from analyze import find_onsets
 from data_handling import *
-from slicer import *
+from slicer import Slicer
+from note import Note
 import argparse
 
 parser = argparse.ArgumentParser(description='arguments')
