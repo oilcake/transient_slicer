@@ -1,7 +1,7 @@
-from analyze import find_onsets
-from data_handling import *
-from slicer import Slicer
-from note import Note
+from housekeeping.datahandling import makedir, get_files
+from audiotools.analyze import find_onsets
+from audiotools.note import Note
+from audiotools.slicer import Slicer
 import argparse
 
 parser = argparse.ArgumentParser(description='arguments')
