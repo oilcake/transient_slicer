@@ -1,9 +1,14 @@
+import argparse
+
+import matplotlib.pyplot as plt
+import librosa
+import librosa.display
+
 from housekeeping.datahandling import makedir, get_files
 from audiotools.analyze import find_onsets
 from audiotools.note import Note
 from audiotools.slicer import Slicer
 from aubio import source
-import argparse
 
 parser = argparse.ArgumentParser(description='arguments')
 parser.add_argument("input", help="Source files directory", type=str)
@@ -25,6 +30,12 @@ makedir(path_out)
 files = get_files(path_in)
 
 for file in files:
+    x, sr = librosa.load(file)
+    plt.figure(figsize=(18, 3))
+    plt.plot()
+    librosa.display.waveplot(x, sr=sr)
+    plt.suptitle(str(file), fontsize=16)
+    plt.show()
     onsets = find_onsets(file)
     sample = source(file, samplerate=0, hop_size=64)
     print()
