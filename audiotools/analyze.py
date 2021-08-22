@@ -2,7 +2,7 @@ import os
 from aubio import source, onset
 
 
-def find_onsets(filename):
+def find_onsets(filename, threshold=2.1):
 
     print()
 
@@ -18,7 +18,7 @@ def find_onsets(filename):
     samplerate = 0
     o = onset("default", win_s, hop_s, samplerate)
 
-    o.set_threshold(2.1)
+    o.set_threshold(threshold)
 
     with source(filename, samplerate, hop_s) as s:
         while True:
